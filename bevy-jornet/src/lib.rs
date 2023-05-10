@@ -6,14 +6,10 @@
 //! - save high scores
 //! - get a leaderboard
 
-use bevy::prelude::{App, Plugin};
-pub use leaderboards::Leaderboard;
+use bevy::prelude::{App, Plugin, ResMut, Resource};
 use uuid::Uuid;
 
-mod http;
-mod leaderboards;
-
-pub use leaderboards::{done_refreshing_leaderboard, Player, Score};
+pub use jornet::{Player, Score};
 
 /// Bevy Plugin handling communications with the Jornet server.
 pub struct JornetPlugin {
@@ -46,10 +42,24 @@ impl JornetPlugin {
     }
 }
 
+/// Leaderboard resource, used to interact with Jornet leaderboard.
+#[derive(Resource)]
+pub struct Leaderboard(jornet::Leaderboard);
+
+/// System to handle refreshing the [`Leaderboard`] resource when new data is available.
+/// It is automatically added by the [`JornetPlugin`](crate::JornetPlugin) in stage
+/// [`CoreStage::Update`](bevy::prelude::CoreStage).
+pub fn done_refreshing_leaderboard(mut leaderboard: ResMut<Leaderboard>) {
+    leaderboard.0.check_for_updates();
+}
+
 impl Plugin for JornetPlugin {
     fn build(&self, app: &mut App) {
-        let leaderboard =
-            Leaderboard::with_host_and_leaderboard(self.host.clone(), self.leaderboard, self.key);
+        let leaderboard = Leaderboard(jornet::Leaderboard::with_host_and_leaderboard(
+            self.host.clone(),
+            self.leaderboard,
+            self.key,
+        ));
         app.insert_resource(leaderboard)
             .add_system(done_refreshing_leaderboard);
     }

@@ -803,18 +803,9 @@ name = "bevy_jornet"
 version = "0.4.0"
 dependencies = [
  "bevy",
- "hex",
- "hmac",
- "js-sys",
+ "jornet",
  "rand 0.8.5",
- "serde",
- "serde_json",
- "sha2 0.10.6",
- "ureq",
  "uuid",
- "wasm-bindgen",
- "wasm-bindgen-futures",
- "web-sys",
 ]
 
 [[package]]
@@ -2427,6 +2418,24 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "936cfd212a0155903bcbc060e316fb6cc7cbf2e1907329391ebadc1fe0ce77c2"
 dependencies = [
  "libc",
+]
+
+[[package]]
+name = "jornet"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "hex",
+ "hmac",
+ "js-sys",
+ "serde",
+ "serde_json",
+ "sha2 0.10.6",
+ "ureq",
+ "uuid",
+ "wasm-bindgen",
+ "wasm-bindgen-futures",
+ "web-sys",
 ]
 
 [[package]]
